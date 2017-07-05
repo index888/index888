@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+    .axis text {
+        font: 10px sans-serif;
+    }
+    .axis path {
+    /*
+    fillとopacityで半透明な背景色。
+    */
+        fill: #fff;
+        /*opacity: 0.1;*/
+        stroke: #000;
+        stroke-width: 1;
+        shape-rendering: crispEdges;
+    }
+    .axis line {
+        stroke: #000;
+        stroke-width: 1;
+        shape-rendering: crispEdges;
+    }
+    .line {
+        fill: black;
+        stroke: DarkGreen;
+        stroke-width: 1.5px;
+    }
+    #autocomplete a {
+        color: white;
+    }
+    #autocomplete a:hover, a:active, a:focus {
+        color: black;
+    }
+    #move_info {
+        background-color:#fff;
+        width:30%;
+    }
+    #move_info hr {
+        margin-top: 10px;
+        margin-bottom: 5px;
+    }
+    input[type=checkbox] {
+      /* Double-sized Checkboxes */
+      -ms-transform: scale(1.2); /* IE */
+      -moz-transform: scale(1.2); /* FF */
+      -webkit-transform: scale(1.2); /* Safari and Chrome */
+      -o-transform: scale(1.2); /* Opera */
+      padding: 10px;
+    }
+    .media-left {
+        padding-left : 20px;
+    }
+    #choice_matches {
+        background-color : #44f9e8;
+        max-height : 600px;
+        overflow-X : hidden;
+        overflow-Y : auto";
+    }
+    </style>
+    <title></title>
+
+    <link rel="stylesheet" href="./public/css/themes/blue/style.css" type="text/css" media="print, projection, screen" />
+    <link rel="stylesheet" href="./public/css/bootstrap.min.css" media="print, projection, screen" />
+    <link rel="stylesheet" href="./public/css/pure-min.css" media="print, projection, screen" />
+
+</head>
+<body ng-app="myApp" ng-controller="MainCtrl">
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.9";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+
+    <ul class="nav nav-tabs navbar-right">
+        <li role="presentation" data-panel="0" class="active main_tab">
+            <a href="#">
+                <h4><strong> 股視大數據 
+                    <div class="fb-like" data-href="https://www.facebook.com/%E8%82%A1%E8%A6%96%E5%A4%A7%E6%95%B8%E6%93%9A-110317559603251" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></div>
+                </strong></h4>
+            </a>
+        </li>
+        <li role="presentation" data-panel="1" class="main_tab">
+            <a href="#">
+                <h4><strong> 盤中即時大數據選股 
+                <span class="label label-danger">Hot</span>
+                <span class="label label-info">Free</span>
+                </strong></h4>
+            </a>
+        </li>
+        <li role="presentation" data-panel="2" class="main_tab">
+            <a href="#">
+                <h4><strong> 篩選清單 </strong></h4>
+            </a>
+        </li>
+        <li role="presentation" data-panel="3" class="main_tab">
+            <a href="#">
+                <h4><strong> 合作洽談專區 </strong></h4>
+            </a>
+        </li>
+    </ul>
+    <div style="clear:both"></div>
+
+    <!-- <div id="box"></div> -->
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title"><span class="glyphicon glyphicon-eye-open"></span> 經典分析指標</h3>
+        </div>
+        <div id="box" class="panel-body"> Panel content </div>
+    </div>
+
+    <div class="panel panel-primary" style="font-size:15px">
+        <div class="panel-heading">
+            <h3 class="panel-title"><span class="glyphicon glyphicon-check"></span> 選股條件</h3>
+        </div>
+        <div class="panel-body">
+            <div class="media">
+                <div class="media-left">
+                    <input class="choice_strategy" type="checkbox" />
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">日成交爆量</h4> 近5個交易日(包含當日盤中)，出現某日成交量顯著超高於多數交易期間的成交量。
+                </div>
+            </div>
+            <hr/>
+            <div class="media">
+                <div class="media-left">
+                    <input class="choice_strategy" type="checkbox" />
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">日成交價創新高</h4>近10個交易日(包含當日盤中)，出現某日成交價創下該交易日先前120天以上期間的新高。
+                </div>
+            </div>
+            <hr/>
+            <div class="media">
+                <div class="media-left">
+                    <input class="choice_strategy" type="checkbox" />
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">日線布林通道開口放大</h4>根據每日交易價格所運算出的布林通道模型，近期呈現軌道緊縮後的放大開口型態。
+                </div>
+            </div>
+            <hr/>
+            <div class="media">
+                <div class="media-left">
+                    <input class="choice_strategy" type="checkbox" />
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">日布林通道上軌突破</h4>根據每日交易價格所運算出的布林通道模型，近3個交易日(包含當日盤中)，通道上軌受到較強勢的K棒突破。
+                </div>
+            </div>
+            <hr/>
+            <div class="media">
+                <div class="media-left">
+                    <input class="choice_strategy" type="checkbox" />
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">日K棒跳空開高</h4>近10個交易日(包含當日盤中)，出現跳空開高之股價型態。
+                </div>
+            </div>
+            <hr/>
+            <div class="media">
+                <div class="media-left">
+                    <input class="choice_strategy" type="checkbox" />
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">日均線糾結翻揚</h4>長中短期的日均線呈現糾結一段期間後，均線開始向上的型態。
+                </div>
+            </div>
+            <hr/>
+            <div class="media">
+                <div class="media-left">
+                    <input class="choice_strategy" type="checkbox" />
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">高熱門率</h4>近期曾經出現日成交量超過其股票發行總量5%的周轉換手現象。
+                </div>
+            </div>
+            <hr/>
+            <div class="media">
+                <div class="media-left">
+                    <input class="choice_strategy" type="checkbox" />
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">股價低於江恩線下緣</h4>根據每日交易價格所運算出的江恩線模型，近期內股價位於江恩線下緣的型態。
+                </div>
+            </div>
+            <hr/>
+            <div class="media">
+                <div class="media-left">
+                    <input class="choice_strategy" type="checkbox" />
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">周成交爆量</h4> 近5個交易周內，出現某周成交量顯著超高於多數交易期間的成交量。
+                </div>
+            </div>
+            <hr/>
+            <div class="media">
+                <div class="media-left">
+                    <input class="choice_strategy" type="checkbox" />
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">周布林通道開口放大</h4>根據每周交易價格所運算出的布林通道模型，近期呈現軌道緊縮後的放大開口型態。
+                </div>
+            </div>
+            <hr/>
+            <div class="media">
+                <div class="media-left">
+                    <input class="choice_strategy" type="checkbox" />
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">周布林通道上軌突破</h4>根據每周交易價格所運算出的布林通道模型，近3個交易周內，通道上軌受到較強勢的K棒突破。
+                </div>
+            </div>
+            <hr/>
+            <div class="media">
+                <div class="media-left">
+                    <input class="choice_strategy" type="checkbox" />
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">周均線糾結翻揚</h4>長中短期的周均線呈現糾結一段期間後，均線開始向上的型態。
+                </div>
+            </div>
+            <hr/>
+            <div class="alert alert-danger" role="alert">
+                <b>使用須知：</b>
+                投資要注意的不僅僅是如何買到好標的，最重要的是如何能把標的<b>買得好</b>。詳盡的<b>風險評估</b>、嚴謹的<b>資金控管</b>，以及<b>紀律落實</b>的投資心態都是投資成功不可或缺的重要關鍵。
+
+                <p id="strategy_btn"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-primary" >
+        <div class="panel-heading">
+            <h3 class="panel-title" >
+                <span class="glyphicon glyphicon-list"></span> 符合篩選條件個股
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div id="choice_matches" class="well" >
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-primary" >
+        <div class="panel-heading">
+            <h3 class="panel-title" >
+                <span class="glyphicon glyphicon-heart"></span> 合作提案
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="page-header">
+                <h1>您好，</h1>
+                <h4>
+                    <p>　　我們歡迎任何形式、不限個人或團體的合作提案詢問，如廣告版面租用、異業合作、產學合作、策略聯盟等等。</p>
+                    <p>　　為節省雙方寶貴時間，加速回覆效率，請您將欲提案的內容針對以下項目大致條列敘述，傳送Facebook私訊或Email給我們，我們會盡快與您聯繫，非常感謝。</p>
+                    <ol>
+                      <li><p>　　合作目的</p></li>
+                      <li><p>　　合作形式</p></li>
+                      <li><p>　　合作預期效益(效益評估)</p></li>
+                    </ol>
+                </h4>
+            </div>
+            <div class="alert alert-info" role="alert">
+                <a href="https://www.facebook.com/%E8%82%A1%E8%A6%96%E5%A4%A7%E6%95%B8%E6%93%9A-110317559603251/" class="alert-link" target="_blank">Facebook 粉絲專頁 (股視大數據)</a>            
+            </div>
+            <div class="alert alert-success" role="alert">
+                <a href="mailto:index888lab@gmail.com" class="alert-link">信箱 (index888lab@gmail.com)</a>
+            </div>
+        </div>
+    </div>
+
+    <div style="height:500px"></div>
+
+    <div id="boot" ng-click='boot()'></div>
+
+    <div id="move_info">
+        <!-- <table class="pure-table" style="width:100%">
+            <thead>
+                <tr>
+                    <th>date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>888</td>
+                </tr>
+            </tbody>
+        </table> -->
+    </div>
+
+    <div class="panel-footer">
+        <p>本站資料主要來源為台灣證券交易所、證券櫃檯買賣中心及公開資訊觀測站。</p>
+        <p>本站提供資料僅供投資人輔助參考，真實買賣相關交易資訊仍應以主要公告來源為準，如依本站資料為買賣依據所發生之交易損失，使用者須自負完全責任。</p>
+        <p>本站不對所提供資料之完整性、可靠性及正確性做任何擔保，如有資料內容疏漏、錯誤、傳輸中斷、延誤更新，本站及相關權利人一概不負任何法律責任，特此聲明。</p>
+
+        <p>本站所有著作及圖表資料均受著作權法相關保護，屬於 股視大數據 及其權利人所有，未經同意授權請勿私自修改引用。</p>
+        <p>Copyright © 2017 index888lab. All rights reserved.</p>
+
+    </div>
+
+    <script src="./public/js/app.js"></script>
+</body>
+</html>
